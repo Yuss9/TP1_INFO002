@@ -83,9 +83,75 @@ void testCalculateN(const std::string &alphabet, int taille)
 
 // QUESTION 2 END
 
-int main()
+// QUESTION 3 START
+
+// Fonction pour afficher l'aide
+void showHelp()
 {
-    cout << "Question 2 : \n";
-    testCalculateN("abcdefghijklmnopqrstuvwxyz", 4);
-    return 0;
+    cout << "Usage: ./program --alphabet=<alphabet> --size=<size> <command>\n";
+    cout << "Commands:\n";
+    cout << "  test_hash <s1> <s2> ... : compute hash of strings s1, s2, ...\n";
+    cout << "  test_calculateN <alphabet> <size> : calculate N for given alphabet and size\n";
+}
+
+// QUESTION 3 END
+
+int main(int argc, char *argv[])
+{
+    // TODO le 2 est a definir encore
+    if (argc < 2)
+    {
+        cerr << "Insufficient arguments\n";
+        showHelp();
+        return 1;
+    }
+
+    // parse command line arguments alphabet and size
+    for (int i = 1; i < argc; ++i)
+    {
+        const char *arg = argv[i];
+
+        if (strncmp(arg, "--help", 7) == 0)
+        {
+            cout << " Help menu : " << arg << "\n";
+            showHelp();
+            return 1;
+        }
+
+        if (strncmp(arg, "--alphabet=", 11) == 0)
+        {
+            globalConfig.alphabet = arg + 11;
+        }
+
+        if (strncmp(arg, "--size=", 7) == 0)
+        {
+            globalConfig.taille = atoi(arg + 7);
+        }
+    }
+
+    /*
+    // Choose the command
+    const char *command = argv[argc - 1];
+    if (strcmp(command, "test_hash") == 0)
+    {
+        return test_hash(argc - 4, argv + 3);
+    }
+    else if (strcmp(command, "test_calculateN") == 0)
+    {
+        if (argc != 6)
+        {
+            cerr << "Invalid number of arguments for test_calculateN\n";
+            showHelp();
+            return 1;
+        }
+
+        testCalculateN(argv[3], atoi(argv[4]));
+        return 0;
+    }
+    else
+    {
+        cerr << "Unknown command: " << command << "\n";
+        showHelp();
+        return 1;
+    } */
 }

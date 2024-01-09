@@ -1,0 +1,6 @@
+# Ignorer le dossier prof
+prof/
+
+# Ignorer le dossier .vscode
+.vscode/
+

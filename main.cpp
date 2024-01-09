@@ -85,6 +85,7 @@ void testCalculateN(const std::string &alphabet, int taille)
 
 int main()
 {
+    cout << "Question 2 : \n";
     testCalculateN("abcdefghijklmnopqrstuvwxyz", 4);
     return 0;
 }

@@ -59,12 +59,14 @@ void calculateN()
         exit(1);
     }
 
+    cout << "Calcul de N en fonction de l'alphabet et de la taille en cours ...\n " << endl;
+
     int alphabetSize = globalConfig.alphabet.size();
     globalConfig.N = static_cast<int>(pow(alphabetSize, globalConfig.taille));
 }
 
 // Fonction pour tester le calcul de N
-void testCalculateN(const std::string &alphabet, int taille)
+int test_config(const std::string &alphabet, int taille)
 {
     globalConfig.alphabet = alphabet;
     globalConfig.taille = taille;
@@ -79,6 +81,8 @@ void testCalculateN(const std::string &alphabet, int taille)
     std::cout << "Alphabet : " << globalConfig.alphabet << "\n";
     std::cout << "Taille : " << globalConfig.taille << "\n";
     std::cout << "N : " << globalConfig.N << "\n";
+
+    return 0;
 }
 
 // QUESTION 2 END
@@ -96,6 +100,28 @@ void showHelp()
 
 // QUESTION 3 END
 
+// MAIN TEST FUNCTION
+
+int main_test(int argc, char *argv[])
+{
+    if (argc < 1)
+    {
+        std::cout << "wrong number of arguments\n";
+        return 1;
+    }
+
+    char *test = argv[0];
+    if (std::strcmp("hash", test) == 0)
+    {
+        return test_hash(argc - 1, argv + 1);
+    }
+    else if (std::strcmp("config", test) == 0)
+    {
+        return test_config(globalConfig.alphabet, globalConfig.taille);
+    }
+    return 0;
+}
+
 int main(int argc, char *argv[])
 {
     // TODO le 2 est a definir encore
@@ -110,6 +136,11 @@ int main(int argc, char *argv[])
     for (int i = 1; i < argc; ++i)
     {
         const char *arg = argv[i];
+
+        if (strcmp(arg, "test") == 0)
+        {
+            return main_test(argc - i - 1, argv + i + 1);
+        }
 
         if (strncmp(arg, "--help", 7) == 0)
         {
@@ -128,30 +159,4 @@ int main(int argc, char *argv[])
             globalConfig.taille = atoi(arg + 7);
         }
     }
-
-    /*
-    // Choose the command
-    const char *command = argv[argc - 1];
-    if (strcmp(command, "test_hash") == 0)
-    {
-        return test_hash(argc - 4, argv + 3);
-    }
-    else if (strcmp(command, "test_calculateN") == 0)
-    {
-        if (argc != 6)
-        {
-            cerr << "Invalid number of arguments for test_calculateN\n";
-            showHelp();
-            return 1;
-        }
-
-        testCalculateN(argv[3], atoi(argv[4]));
-        return 0;
-    }
-    else
-    {
-        cerr << "Unknown command: " << command << "\n";
-        showHelp();
-        return 1;
-    } */
 }

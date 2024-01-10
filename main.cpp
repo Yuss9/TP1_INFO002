@@ -15,10 +15,19 @@ struct Config
 
 Config globalConfig; // Variable globale pour stocker la configuration
 
+vector<string> EMPREINTE;
+vector<string> TEXTE;
+
 // HELP FUNCTION START
 
 void updateGlobalConfigN()
 {
+    if (globalConfig.alphabet.empty() || globalConfig.taille <= 0)
+    {
+        cerr << "Configuration invalide : alphabet vide ou taille non positive\n";
+        exit(1);
+    }
+
     int alphabetSize = globalConfig.alphabet.size();
     globalConfig.N = static_cast<int>(pow(alphabetSize, globalConfig.taille));
 }
@@ -110,6 +119,7 @@ void showHelp()
     cout << "  calculateN  : calculate N, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=4 test calculateN \n";
     cout << "  i2c  : test function i2c, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=4 test i2c \n";
     cout << "  h2i  : test function h2i, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=4 test h2i \n";
+    cout << "  nouvelle_chaine  : test function nouvelle_chaine, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=5 test nouvelle_chaine \n";
 }
 // QUESTION 3 END
 
@@ -186,6 +196,82 @@ int test_h2i()
 
 // QUESTION 6 END
 
+// QUESTION 7 START
+
+// Fonction pour transformer un indice en chaîne résultante
+vector<int> i2i(int indice, int n)
+{
+    vector<int> result;
+    for (int i = 0; i < n; ++i)
+    {
+        result.push_back(indice);
+        indice = h2i((const unsigned char *)(EMPREINTE.back().c_str()), indice, globalConfig.N);
+    }
+    result.push_back(indice);
+    return result;
+}
+
+// Fonction pour afficher un vecteur d'entiers
+void afficher_vecteur(const vector<int> &vecteur)
+{
+    for (int i : vecteur)
+    {
+        cout << i << " ";
+    }
+    cout << "\n";
+}
+
+// Fonction pour générer une nouvelle chaine
+vector<int> nouvelle_chaine(int idx1, int largeur)
+{
+    vector<int> result;
+
+    result.push_back(idx1);
+
+    for (int i = 1; i < largeur; ++i)
+    {
+        idx1 = h2i((const unsigned char *)(EMPREINTE.back().c_str()), idx1, globalConfig.N);
+        result.push_back(idx1);
+    }
+
+    return result;
+}
+
+// Fonction pour afficher la chaine résultante
+void afficher_chaine(int idx1, int largeur)
+{
+    vector<int> result = nouvelle_chaine(idx1, largeur);
+
+    cout << "Chaine de longueur " << largeur << ": ";
+    // afficher_vecteur(result);
+}
+
+int test_nouvelle_chaine()
+{
+    updateGlobalConfigN();
+    cout << "Affichage de la config : \n";
+    cout << "Alphabet : " << globalConfig.alphabet << "\n";
+    cout << "Taille : " << globalConfig.taille << "\n";
+    cout << "N : " << globalConfig.N << "\n";
+
+    cout << "Test de la fonction nouvelle_chaine : \n";
+
+    // Test de la fonction calculateN
+    calculateN();
+
+    // Test de la fonction i2c
+    cout << "i2c(1234) = " << i2c(globalConfig.alphabet, globalConfig.taille, 1234) << endl;
+    cout << "i2c(" << globalConfig.N - 1 << ") = " << i2c(globalConfig.alphabet, globalConfig.taille, globalConfig.N - 1) << endl;
+
+    // Test de la fonction nouvelle_chaine
+    afficher_chaine(1, 1);
+    afficher_chaine(1, 10);
+    afficher_chaine(1, 1000);
+
+    return 1;
+}
+// QUESTION 7 END
+
 // MAIN TEST FUNCTION
 
 int main_test(int argc, char *argv[])
@@ -212,6 +298,15 @@ int main_test(int argc, char *argv[])
     else if (std::strcmp("h2i", test) == 0)
     {
         return test_h2i();
+    }
+    else if (std::strcmp("nouvelle_chaine", test) == 0)
+    {
+        return test_nouvelle_chaine();
+    }
+    else
+    {
+        std::cout << "unknown test\n";
+        return 1;
     }
     return 0;
 }

@@ -4,3 +4,4 @@ prof/
 # Ignorer le dossier .vscode
 .vscode/
 
+.DS_Store

@@ -138,7 +138,7 @@ string i2c(string alphabet, int taille, int n)
     // rajoute des A devant si la taille de la chaine est inferieur a la taille
     while (result.length() < taille)
     {
-        result = 'A' + result;
+        result = alphabet.find('A') != std::string::npos ? 'A' + result : 'a' + result;
     }
 
     return result;
@@ -225,12 +225,16 @@ void afficher_vecteur(const vector<int> &vecteur)
 vector<int> nouvelle_chaine(int idx1, int largeur)
 {
     vector<int> result;
-
-    result.push_back(idx1);
-
     for (int i = 1; i < largeur; ++i)
     {
-        idx1 = h2i((const unsigned char *)(EMPREINTE.back().c_str()), idx1, globalConfig.N);
+        const char *value = i == 1 ? i2c(globalConfig.alphabet, globalConfig.taille, 1).c_str() : i2c(globalConfig.alphabet, globalConfig.taille, result.back()).c_str();
+        TEXTE.push_back(value);
+
+        unsigned char hash[SHA_DIGEST_LENGTH];
+        calculateHash(value, hash);
+        EMPREINTE.push_back((const char *)hash);
+
+        idx1 = h2i((const unsigned char *)EMPREINTE.back().c_str(), i, globalConfig.N);
         result.push_back(idx1);
     }
 
@@ -241,9 +245,8 @@ vector<int> nouvelle_chaine(int idx1, int largeur)
 void afficher_chaine(int idx1, int largeur)
 {
     vector<int> result = nouvelle_chaine(idx1, largeur);
-
     cout << "Chaine de longueur " << largeur << ": ";
-    // afficher_vecteur(result);
+    afficher_vecteur(result);
 }
 
 int test_nouvelle_chaine()
@@ -255,18 +258,15 @@ int test_nouvelle_chaine()
     cout << "N : " << globalConfig.N << "\n";
 
     cout << "Test de la fonction nouvelle_chaine : \n";
-
-    // Test de la fonction calculateN
     calculateN();
 
-    // Test de la fonction i2c
     cout << "i2c(1234) = " << i2c(globalConfig.alphabet, globalConfig.taille, 1234) << endl;
     cout << "i2c(" << globalConfig.N - 1 << ") = " << i2c(globalConfig.alphabet, globalConfig.taille, globalConfig.N - 1) << endl;
 
-    // Test de la fonction nouvelle_chaine
     afficher_chaine(1, 1);
     afficher_chaine(1, 10);
-    afficher_chaine(1, 1000);
+    // afficher_chaine(1, 100);
+    //  afficher_chaine(1, 1000);
 
     return 1;
 }

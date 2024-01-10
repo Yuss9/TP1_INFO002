@@ -48,6 +48,7 @@ int test_hash(int argc, char *argv[])
 }
 
 // QUESTION 1 END
+
 // QUESTION 2 START
 
 // Fonction pour calculer N en fonction de alphabet et taille
@@ -94,8 +95,8 @@ void showHelp()
 {
     cout << "Usage: ./program --alphabet=<alphabet> --size=<size> <command>\n";
     cout << "Commands:\n";
-    cout << "  test_hash <s1> <s2> ... : compute hash of strings s1, s2, ...\n";
-    cout << "  test_calculateN <alphabet> <size> : calculate N for given alphabet and size\n";
+    cout << "  hash <s1> <s2> ... : compute hash of strings s1, s2, ...\n";
+    cout << "  calculateN  : calculate N, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=4 test calculateN \n";
 }
 
 // QUESTION 3 END
@@ -115,7 +116,7 @@ int main_test(int argc, char *argv[])
     {
         return test_hash(argc - 1, argv + 1);
     }
-    else if (std::strcmp("config", test) == 0)
+    else if (std::strcmp("calculateN", test) == 0)
     {
         return test_config(globalConfig.alphabet, globalConfig.taille);
     }

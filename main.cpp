@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <openssl/sha.h>
 #include <cmath>
+#include <sstream>
 
 using namespace std;
 
@@ -108,6 +109,7 @@ void showHelp()
     cout << "  hash <s1> <s2> ... : compute hash of strings s1, s2, ...\n";
     cout << "  calculateN  : calculate N, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=4 test calculateN \n";
     cout << "  i2c  : test function i2c, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=4 test i2c \n";
+    cout << "  h2i  : test function h2i, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=4 test h2i \n";
 }
 // QUESTION 3 END
 
@@ -148,6 +150,42 @@ int test_i2c()
 
 // QUESTION 4 END
 
+// QUESTION 6 START
+uint64_t h2i(const unsigned char *hash, size_t t, int N)
+{
+    return (*((uint64_t *)hash) + t) % N;
+}
+
+int test_h2i()
+{
+    updateGlobalConfigN();
+    const char *texte = "oups";
+    unsigned char hash_result[20];
+
+    cout << "alphabet = \"" << globalConfig.alphabet << "\"" << endl;
+    cout << "taille = " << globalConfig.taille << endl;
+    cout << "N = " << globalConfig.N << endl;
+    unsigned char hash[SHA_DIGEST_LENGTH];
+
+    calculateHash(texte, hash);
+
+    cout << "hash(\"" << texte << "\") = ";
+    for (int k = 0; k < SHA_DIGEST_LENGTH; k++)
+    {
+        cout << hex << setw(2) << setfill('0') << static_cast<int>(hash[k]);
+    }
+
+    cout << "\n";
+
+    int t = 1;
+    uint64_t result = h2i(hash, t, globalConfig.N);
+    cout << dec << "h2i(hash(\"" << texte << "\"), " << t << ") = " << result << endl;
+
+    return 0;
+}
+
+// QUESTION 6 END
+
 // MAIN TEST FUNCTION
 
 int main_test(int argc, char *argv[])
@@ -170,6 +208,10 @@ int main_test(int argc, char *argv[])
     else if (std::strcmp("i2c", test) == 0)
     {
         return test_i2c();
+    }
+    else if (std::strcmp("h2i", test) == 0)
+    {
+        return test_h2i();
     }
     return 0;
 }

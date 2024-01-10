@@ -14,6 +14,16 @@ struct Config
 
 Config globalConfig; // Variable globale pour stocker la configuration
 
+// HELP FUNCTION START
+
+void updateGlobalConfigN()
+{
+    int alphabetSize = globalConfig.alphabet.size();
+    globalConfig.N = static_cast<int>(pow(alphabetSize, globalConfig.taille));
+}
+
+// HELP FUNCTION END
+
 // QUESTION 1 START
 void calculateHash(const char *input, unsigned char *output)
 {
@@ -97,9 +107,46 @@ void showHelp()
     cout << "Commands:\n";
     cout << "  hash <s1> <s2> ... : compute hash of strings s1, s2, ...\n";
     cout << "  calculateN  : calculate N, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=4 test calculateN \n";
+    cout << "  i2c  : test function i2c, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=4 test i2c \n";
+}
+// QUESTION 3 END
+
+// QUESTION 4 START
+
+string i2c(string alphabet, int taille, int n)
+{
+    string result;
+    while (n > 0)
+    {
+        int remainder = n % alphabet.size();
+        result = alphabet[remainder] + result;
+        n = n / alphabet.size();
+    }
+
+    // rajoute des A devant si la taille de la chaine est inferieur a la taille
+    while (result.length() < taille)
+    {
+        result = 'A' + result;
+    }
+
+    return result;
 }
 
-// QUESTION 3 END
+int test_i2c()
+{
+    updateGlobalConfigN();
+    cout << "Affichage de la config : \n";
+    cout << "Alphabet : " << globalConfig.alphabet << "\n";
+    cout << "Taille : " << globalConfig.taille << "\n";
+    cout << "N : " << globalConfig.N << "\n";
+
+    cout << "Test de la fonction i2c : \n";
+    cout << "i2c(1234) = " << i2c(globalConfig.alphabet, globalConfig.taille, 1234) << std::endl;
+    cout << "i2c(" << globalConfig.N - 1 << ") = " << i2c(globalConfig.alphabet, globalConfig.taille, globalConfig.N - 1) << std::endl;
+    return 1;
+}
+
+// QUESTION 4 END
 
 // MAIN TEST FUNCTION
 
@@ -119,6 +166,10 @@ int main_test(int argc, char *argv[])
     else if (std::strcmp("calculateN", test) == 0)
     {
         return test_config(globalConfig.alphabet, globalConfig.taille);
+    }
+    else if (std::strcmp("i2c", test) == 0)
+    {
+        return test_i2c();
     }
     return 0;
 }

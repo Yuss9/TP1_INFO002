@@ -42,3 +42,9 @@ La complexité totale serait alors O(k * log(hauteur))
 - Stockage complet de la table: O(hauteur * largeur)
 
 La méthode avec un compromis temps-mémoire offre une complexité en temps généralement meilleure que la recherche exhaustive mais peut être plus lente que le précalcul complet, lorsque k est proche de largeur. En termes d'espace, elle utilise moins de mémoire que le précalcul complet mais plus que la recherche exhaustive.
+
+### QUESTIONS 8
+
+L'ajout du paramètre `t` dans la fonction `h2i` permet d'introduire un décalage supplémentaire dans le calcul de la fonction de hachage. Ce décalage permet de générer des indices différents pour des empreintes identiques, augmentant ainsi la couverture de la table. En d'autres termes, des textes clairs qui produiraient normalement la même empreinte pourraient être différenciés en ajoutant une valeur de décalage `t`.
+
+Cela est particulièrement utile pour éviter des collisions dans la table arc-en-ciel. Dans le contexte des tables arc-en-ciel, on a une collision quand lorsqu'une même valeur d'indice est obtenue pour des empreintes différentes. En ajoutant le paramètre `t`. On permet la diversification des indices générés pour des empreintes similaires.

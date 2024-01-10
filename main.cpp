@@ -11,6 +11,9 @@ struct Config
     string alphabet;
     int taille;
     int N;
+    int alphabet_length;
+    int height;
+    int width;
 };
 
 Config globalConfig; // Variable globale pour stocker la configuration
@@ -120,6 +123,7 @@ void showHelp()
     cout << "  i2c  : test function i2c, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=4 test i2c \n";
     cout << "  h2i  : test function h2i, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=4 test h2i \n";
     cout << "  nouvelle_chaine  : test function nouvelle_chaine, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=5 test nouvelle_chaine \n";
+    cout << "  create_table  : test function create_table, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=5 --height=100 --width=200 test create_table \n";
 }
 // QUESTION 3 END
 
@@ -272,6 +276,66 @@ int test_nouvelle_chaine()
 }
 // QUESTION 7 END
 
+// QUESTION 9 START
+
+int index_aleatoire(int hauteur)
+{
+    // Le modulo permet de s'assurer que l'indice est dans la plage de la hauteur de la table
+    return rand() % hauteur;
+}
+
+// Fonction pour créer la table arc-en-ciel
+vector<pair<int, int>> creer_table(int largeur, int hauteur)
+{
+    vector<pair<int, int>> table;
+
+    // Ajouter la première chaîne avec un indice initialisé à 0
+    table.push_back(make_pair(0, index_aleatoire(hauteur)));
+
+    // Générer les chaînes suivantes
+    for (int i = 1; i < hauteur; ++i)
+    {
+        int idx_aleatoire = index_aleatoire(hauteur);
+        table.push_back(make_pair(i, idx_aleatoire));
+    }
+    vector<int> chaine = nouvelle_chaine(1, hauteur);
+
+    for (auto &i : table)
+    {
+        i.second = chaine[i.first];
+    }
+
+    // Trier la table par ordre croissant de la dernière colonne (les indices)
+    sort(table.begin(), table.end(), [](const pair<int, int> &a, const pair<int, int> &b)
+         { return a.second < b.second; });
+
+    return table;
+}
+
+int test_create_table()
+{
+    updateGlobalConfigN();
+
+    cout << "Affichage de la config : \n";
+    cout << "Alphabet : " << globalConfig.alphabet << "\n";
+    cout << "Alphabet length : " << globalConfig.alphabet_length << "\n";
+    cout << "Taille : " << globalConfig.taille << "\n";
+    cout << "Nb clear texts : " << globalConfig.N << "\n";
+    cout << "Height : " << globalConfig.height << "\n";
+    cout << "Widht : " << globalConfig.width << "\n";
+
+    srand(time(nullptr));
+    vector<pair<int, int>> ma_table = creer_table(globalConfig.width, globalConfig.height);
+    cout << "Content:\n";
+    for (const auto &entry : ma_table)
+    {
+        cout << setw(9) << entry.first << ": --> " << entry.second << endl;
+    }
+    return 0;
+}
+
+// QUESTION 9 END
+
 // MAIN TEST FUNCTION
 
 int main_test(int argc, char *argv[])
@@ -302,6 +366,10 @@ int main_test(int argc, char *argv[])
     else if (std::strcmp("nouvelle_chaine", test) == 0)
     {
         return test_nouvelle_chaine();
+    }
+    else if (std::strcmp("create_table", test) == 0)
+    {
+        return test_create_table();
     }
     else
     {
@@ -346,6 +414,20 @@ int main(int argc, char *argv[])
         if (strncmp(arg, "--size=", 7) == 0)
         {
             globalConfig.taille = atoi(arg + 7);
+        }
+
+        if (strncmp(arg, "--alphabet_length=", 18) == 0)
+        {
+            globalConfig.alphabet_length = atoi(arg + 18);
+        }
+
+        if (strncmp(arg, "--width=", 8) == 0)
+        {
+            globalConfig.width = atoi(arg + 8);
+        }
+        if (strncmp(arg, "--height=", 9) == 0)
+        {
+            globalConfig.height = atoi(arg + 9);
         }
     }
 }

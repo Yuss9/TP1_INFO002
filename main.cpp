@@ -133,6 +133,7 @@ void showHelp()
     cout << "  nouvelle_chaine  : test function nouvelle_chaine, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=5 test nouvelle_chaine \n";
     cout << "  create_table  : test function create_table, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=5 --height=100 --width=200 test create_table \n";
     cout << "  save_table  : test function save open and affiche table, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=5 --height=100 --width=200 test save_table \n";
+    cout << "  recherche_table  : test function recherche table, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=5 --height=100 --width=200 test recherche_table \n";
 }
 // QUESTION 3 END
 
@@ -499,10 +500,73 @@ int test_save_open_affiche_table()
     ouvre_table("table.txt", table);
     cout << endl;
     cout << "APRES CREATION TABLE" << endl;
-    affiche_table(table);
+    // affiche_table(table);
+
+    // print table
+    cout << "test affiche table" << endl;
+    for (const auto &entry : table)
+    {
+        cout << setw(9) << entry.first << ": --> " << entry.second << endl;
+    }
 }
 
 // QUESTION 10 END
+
+// QUESTION 11 START
+
+int recherche(vector<pair<int, int>> table, int hauteur, int idx, int *a, int *b)
+{
+    int i = 0;
+    int j = hauteur - 1;
+    while (i <= j)
+    {
+        int m = (i + j) / 2;
+        if (table[m].second == idx)
+        {
+            // On cherche après
+            int maxInclusif = m;
+            while (maxInclusif < hauteur - 1 && table[maxInclusif + 1].second == idx)
+            {
+                maxInclusif++;
+            }
+
+            // On cherche avant
+            int minInclusif = m;
+            while (0 < minInclusif && table[minInclusif - 1].second == idx)
+            {
+                minInclusif--;
+            }
+
+            *a = minInclusif;
+            *b = maxInclusif;
+
+            return *b - *a + 1;
+        }
+        else if (table[m].second < idx)
+        {
+            i = m + 1;
+        }
+        else
+        {
+            j = m - 1;
+        }
+    }
+    return 0;
+}
+
+int test_recherche()
+{
+    updateGlobalConfigN();
+    vector<pair<int, int>> table;
+    ouvre_table("table.txt", table);
+    cout << endl;
+    cout << "test recherche" << endl;
+    int a, b;
+    recherche(table, globalConfig.height, 11797675, &a, &b);
+    cout << a << " " << b << endl;
+}
+
+// QUESTION 11 END
 
 // MAIN TEST FUNCTION
 
@@ -542,6 +606,10 @@ int main_test(int argc, char *argv[])
     else if (std::strcmp("save_table", test) == 0)
     {
         return test_save_open_affiche_table();
+    }
+    else if (std::strcmp("recherche_table", test) == 0)
+    {
+        return test_recherche();
     }
     else
     {

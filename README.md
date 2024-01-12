@@ -5,7 +5,7 @@ Sujet : https://pierre-hyvernat.apps.math.cnrs.fr/data/Enseignement/2324/info002
 ### STATUS 
 
 Equipe : YURTSEVEN Hüseyin, CHAVANCE Rémi, DURAND-NOËL Amaury
-Etat : on est au debut de la question 7
+Etat : on est au debut de la question 11 la fonction recherche fonctionne
 
 ## QUESTIONS
 

@@ -3,7 +3,11 @@
 #include <openssl/sha.h>
 #include <cmath>
 #include <sstream>
+#include <cstring>
+#include <vector>
 
+#include <fstream>
+#include <string>
 using namespace std;
 
 struct Config
@@ -128,6 +132,7 @@ void showHelp()
     cout << "  h2i  : test function h2i, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=4 test h2i \n";
     cout << "  nouvelle_chaine  : test function nouvelle_chaine, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=5 test nouvelle_chaine \n";
     cout << "  create_table  : test function create_table, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=5 --height=100 --width=200 test create_table \n";
+    cout << "  save_table  : test function save open and affiche table, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=5 --height=100 --width=200 test save_table \n";
 }
 // QUESTION 3 END
 
@@ -334,6 +339,171 @@ int test_create_table()
 
 // QUESTION 9 END
 
+// QUESTION 10 START
+
+// Fonction pour sauvegarder une table dans un fichier
+void sauve_table(const string &filename, const vector<pair<int, int>> &table)
+{
+    // write table in file filename
+    ofstream file(filename);
+
+    // Vérifier si le fichier est ouvert avec succès
+    if (!file.is_open())
+    {
+        cerr << "Erreur : Impossible d'ouvrir le fichier pour écriture." << endl;
+        return;
+    }
+
+    // Écrire les paramètres de la table dans le fichier
+    file << "Hash function: SHA1\n";
+    file << "Alphabet: " << globalConfig.alphabet << "\n";
+    file << "Alphabet length: " << globalConfig.alphabet_length << "\n";
+    file << "Size: " << globalConfig.taille << "\n";
+    file << "Width: " << globalConfig.width << "\n";
+    file << "Height: " << globalConfig.height << "\n";
+    file << "Nb clear texts: " << globalConfig.N << "\n";
+    file << "Content:\n";
+
+    // Écrire les données de la table dans le fichier
+    for (const auto &entry : table)
+    {
+        file << entry.first << " " << entry.second << "\n";
+    }
+
+    // Fermer le fichier
+    file.close();
+}
+
+// Fonction pour ouvrir une table depuis un fichier
+void ouvre_table(const string &filename, vector<pair<int, int>> &table)
+{
+    // read table from file filename
+    ifstream file(filename);
+
+    // Vérifier si le fichier est ouvert avec succès
+    if (!file.is_open())
+    {
+        cerr << "Erreur : Impossible d'ouvrir le fichier pour lecture." << endl;
+        return;
+    }
+
+    // Lire les paramètres de la table depuis le fichier
+    string uselessline;
+    string alphabet_length;
+    string taille;
+    string width;
+    string height;
+    string N;
+
+    getline(file, uselessline);
+    getline(file, globalConfig.alphabet);
+    getline(file, alphabet_length);
+    getline(file, taille);
+    getline(file, width);
+    getline(file, height);
+    getline(file, N);
+
+    // On extrait la valeur après les deux-points (:) dans le cas où vous voulez la récupérer
+    size_t colonPos = globalConfig.alphabet.find(":");
+    if (colonPos != string::npos)
+    {
+        globalConfig.alphabet = globalConfig.alphabet.substr(colonPos + 1);
+    }
+
+    colonPos = alphabet_length.find(":");
+    if (colonPos != string::npos)
+    {
+        globalConfig.alphabet_length = stoi(alphabet_length.substr(colonPos + 2));
+    }
+
+    colonPos = taille.find(":");
+    if (colonPos != string::npos)
+    {
+        globalConfig.taille = stoi(taille.substr(colonPos + 2));
+    }
+
+    colonPos = width.find(":");
+    if (colonPos != string::npos)
+    {
+        globalConfig.width = stoi(width.substr(colonPos + 2));
+    }
+
+    colonPos = height.find(":");
+    if (colonPos != string::npos)
+    {
+        globalConfig.height = stoi(height.substr(colonPos + 2));
+    }
+
+    colonPos = N.find(":");
+    if (colonPos != string::npos)
+    {
+        globalConfig.N = stoi(N.substr(colonPos + 2));
+    }
+
+    // Content: is the empty line
+    string emptyLine;
+    getline(file, emptyLine);
+
+    table.clear();
+    std::vector<std::pair<int, int>> numberPairs;
+    int number1, number2;
+
+    std::string line;
+    int index, value;
+    while (file >> index >> value)
+    {
+        table.emplace_back(index, value);
+    }
+
+    // Fermer le fichier
+    file.close();
+}
+
+void affiche_table(const vector<pair<int, int>> &table)
+{
+    // Afficher les paramètres de la table
+    cout << "hash function: SHA1" << endl;
+    cout << "Alphabet: " << globalConfig.alphabet << endl;
+    cout << "Alphabet length: " << globalConfig.alphabet_length << endl;
+    cout << "Size: " << globalConfig.taille << endl;
+    cout << "Width: " << globalConfig.width << endl;
+    cout << "Height: " << globalConfig.height << endl;
+    cout << "Nb clear texts: " << globalConfig.N << endl;
+    cout << "Content:" << endl;
+
+    // Afficher les données de la table
+    for (const auto &entry : table)
+    {
+        cout << setw(9) << entry.first << " --> " << entry.second << endl;
+    }
+}
+
+int test_save_open_affiche_table()
+{
+    updateGlobalConfigN();
+
+    cout << "AVANT CREATION TABLE" << endl;
+    cout << "Affichage de la config : \n";
+    cout << "Alphabet : " << globalConfig.alphabet << "\n";
+    cout << "Alphabet length : " << globalConfig.alphabet_length << "\n";
+    cout << "Taille : " << globalConfig.taille << "\n";
+    cout << "Nb clear texts : " << globalConfig.N << "\n";
+    cout << "Height : " << globalConfig.height << "\n";
+    cout << "Widht : " << globalConfig.width << "\n";
+
+    srand(time(nullptr));
+    vector<pair<int, int>> table = creer_table(globalConfig.width, globalConfig.height);
+    cout << endl;
+    sauve_table("table.txt", table);
+    cout << endl;
+    ouvre_table("table.txt", table);
+    cout << endl;
+    cout << "APRES CREATION TABLE" << endl;
+    affiche_table(table);
+}
+
+// QUESTION 10 END
+
 // MAIN TEST FUNCTION
 
 int main_test(int argc, char *argv[])
@@ -368,6 +538,10 @@ int main_test(int argc, char *argv[])
     else if (std::strcmp("create_table", test) == 0)
     {
         return test_create_table();
+    }
+    else if (std::strcmp("save_table", test) == 0)
+    {
+        return test_save_open_affiche_table();
     }
     else
     {

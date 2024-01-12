@@ -40,6 +40,10 @@ void updateGlobalConfigN()
 // QUESTION 1 START
 void calculateHash(const char *input, unsigned char *output)
 {
+    // add 0 to input
+    std::stringstream ss;
+    ss << input << "\0";
+    input = ss.str().c_str();
     SHA1(reinterpret_cast<const unsigned char *>(input), strlen(input), output);
 }
 
@@ -203,43 +207,40 @@ int test_h2i()
 // QUESTION 7 START
 
 // Fonction pour transformer un indice en chaîne résultante
-vector<int> i2i(int indice, int n)
+uint64_t i2i(int t, int n)
 {
-    vector<int> result;
-    for (int i = 0; i < n; ++i)
-    {
-        result.push_back(indice);
-        indice = h2i((const unsigned char *)(EMPREINTE.back().c_str()), indice, globalConfig.N);
-    }
-    result.push_back(indice);
-    return result;
+    const char *value = i2c(globalConfig.alphabet, globalConfig.taille, n).c_str();
+    TEXTE.push_back(value);
+
+    unsigned char hash[SHA_DIGEST_LENGTH];
+    calculateHash(value, hash);
+    EMPREINTE.push_back((const char *)hash);
+
+    return h2i((const unsigned char *)(hash), t, globalConfig.N);
 }
 
 // Fonction pour afficher un vecteur d'entiers
-void afficher_vecteur(const vector<int> &vecteur)
+void afficher_vecteur(int idx1, const vector<int> &vecteur)
 {
-    for (int i : vecteur)
+    for (int i = idx1; i < vecteur.size(); ++i)
     {
-        cout << i << " ";
+        cout << vecteur[i] << " ";
     }
     cout << "\n";
+
+    EMPREINTE.clear();
+    TEXTE.clear();
 }
 
 // Fonction pour générer une nouvelle chaine
 vector<int> nouvelle_chaine(int idx1, int largeur)
 {
     vector<int> result;
-    for (int i = 1; i < largeur; ++i)
+    int n = idx1;
+    for (int i = 0; i < largeur - 1; ++i)
     {
-        const char *value = i == 1 ? i2c(globalConfig.alphabet, globalConfig.taille, 1).c_str() : i2c(globalConfig.alphabet, globalConfig.taille, result.back()).c_str();
-        TEXTE.push_back(value);
-
-        unsigned char hash[SHA_DIGEST_LENGTH];
-        calculateHash(value, hash);
-        EMPREINTE.push_back((const char *)hash);
-
-        idx1 = h2i((const unsigned char *)EMPREINTE.back().c_str(), i, globalConfig.N);
-        result.push_back(idx1);
+        n = i2i(i + 1, n);
+        result.push_back(n);
     }
 
     return result;
@@ -250,7 +251,7 @@ void afficher_chaine(int idx1, int largeur)
 {
     vector<int> result = nouvelle_chaine(idx1, largeur);
     cout << "Chaine de longueur " << largeur << ": ";
-    afficher_vecteur(result);
+    afficher_vecteur(idx1, result);
 }
 
 int test_nouvelle_chaine()
@@ -269,8 +270,8 @@ int test_nouvelle_chaine()
 
     afficher_chaine(1, 1);
     afficher_chaine(1, 10);
-    // afficher_chaine(1, 100);
-    //  afficher_chaine(1, 1000);
+    afficher_chaine(1, 100);
+    afficher_chaine(1, 1000);
 
     return 1;
 }
@@ -289,25 +290,22 @@ vector<pair<int, int>> creer_table(int largeur, int hauteur)
 {
     vector<pair<int, int>> table;
 
-    // Ajouter la première chaîne avec un indice initialisé à 0
-    table.push_back(make_pair(0, index_aleatoire(hauteur)));
-
     // Générer les chaînes suivantes
-    for (int i = 1; i < hauteur; ++i)
-    {
-        int idx_aleatoire = index_aleatoire(hauteur);
-        table.push_back(make_pair(i, idx_aleatoire));
-    }
-    vector<int> chaine = nouvelle_chaine(1, hauteur);
 
-    for (auto &i : table)
+    for (int i = 0; i < hauteur; ++i)
     {
-        i.second = chaine[i.first];
+        int idx1 = index_aleatoire(hauteur);
+        // int idx1 = i; // pour vous monsieur pour tester
+        vector<int> chaine = nouvelle_chaine(idx1, largeur);
+        table.push_back(make_pair(i, chaine.back()));
     }
 
     // Trier la table par ordre croissant de la dernière colonne (les indices)
-    sort(table.begin(), table.end(), [](const pair<int, int> &a, const pair<int, int> &b)
-         { return a.second < b.second; });
+    sort(
+        table.begin(),
+        table.end(),
+        [](const pair<int, int> &a, const pair<int, int> &b)
+        { return a.second < b.second; });
 
     return table;
 }
@@ -325,9 +323,9 @@ int test_create_table()
     cout << "Widht : " << globalConfig.width << "\n";
 
     srand(time(nullptr));
-    vector<pair<int, int>> ma_table = creer_table(globalConfig.width, globalConfig.height);
+    vector<pair<int, int>> table = creer_table(globalConfig.width, globalConfig.height);
     cout << "Content:\n";
-    for (const auto &entry : ma_table)
+    for (const auto &entry : table)
     {
         cout << setw(9) << entry.first << ": --> " << entry.second << endl;
     }

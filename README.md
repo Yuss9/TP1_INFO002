@@ -4,7 +4,7 @@ Sujet : https://pierre-hyvernat.apps.math.cnrs.fr/data/Enseignement/2324/info002
 
 ### STATUS 
 
-Equipe : YURTSEVEN Huseyin, CHAVANCE Rémi, DURAND NOEL Amaury
+Equipe : YURTSEVEN Hüseyin, CHAVANCE Rémi, DURAND-NOËL Amaury
 Etat : on est au debut de la question 7
 
 ## QUESTIONS

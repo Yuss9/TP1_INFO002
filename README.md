@@ -21,7 +21,7 @@ make
 ### QUESTIONS 1
 
 ```bash
-./main hash Salut Bob
+./main test hash Salut Bob
 ```
 
 ### QUESTIONS 2
@@ -99,14 +99,30 @@ Cela est particulièrement utile pour éviter des collisions dans la table arc-e
 
 ### QUESTIONS 9
 
+**En mode random :**
+
 ```bash
-./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=5 --height=100 --width=200 test create_table
+./main --alphabet=abcdefghijklmnopqrstuvwxyz --randTable --size=5 --height=100 --width=200 test create_table
+```
+
+
+**En mode test prof :**
+
+```bash
+./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=5 --height=100 --width=200 test create_table
 ```
 
 ### QUESTIONS 10
 
+**En mode random :**
 ```bash
-./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=5 --height=100 --width=200 test save_table
+./main --alphabet=abcdefghijklmnopqrstuvwxyz --randTable --size=5 --height=100 --width=200 test save_table
+```
+
+**En mode test prof :**
+
+```bash
+./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=5 --height=100 --width=200 test save_table
 ```
 
 ### QUESTIONS 11
@@ -114,12 +130,12 @@ Cela est particulièrement utile pour éviter des collisions dans la table arc-e
 **On ajoute dans un premier temps le fichier table.txt avec le tableau a l'intérieur**
 
 ```bash
- ./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=4 --height=1000 --width=3000 test save_table
+ ./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --size=4 --height=1000 --width=3000 test save_table
 ```
 
 
 ```bash
- ./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=4 --height=1000 --width=3000 test inverse
+./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --hash=16de25af888480da1af57a71855f3e8c515dcb61 --size=4 --height=1000 --width=3000 test crack
 ```
 
 
@@ -136,5 +152,79 @@ Dans le contexte d'une table arc-en-ciel, la complexité pourrait être évalué
 ### Question 13
 
 ```bash
-./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --alphabet_length=26 --size=4 --height=1000 --width=1000 test stats
+./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --size=4 --height=1000 --width=1000 test stats
 ```
+
+
+### Question 14
+
+#### 1° hash
+
+Pour **16de25af888480da1af57a71855f3e8c515dcb61** avec une taille de 4 et l'alphabet suivant : **ABCDEFGHIJKLMNOPQRSTUVWXYZ**
+
+**On ajoute dans un premier temps le fichier table.txt avec le tableau a l'intérieur**
+
+```bash
+ ./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --size=4 --height=1000 --width=3000 test save_table
+```
+
+
+```bash
+./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --hash=16de25af888480da1af57a71855f3e8c515dcb61 --size=4 --height=1000 --width=3000 test crack
+```
+
+On obtient ceci  : 
+
+>temps de génération de la table dans le fichier table.txt : 3.268s
+>
+>taille de la table : 10Ko
+>
+>temps de calcul de l'inverse (crackage) : 0.33s  
+
+#### 2° hash
+
+Pour `dafaa5e15a30ecd52c2d1dc6d1a3d8a0633e67e2` de taille `5` et l'alphabet suivant : `abcdefghijklmnopqrstuvwxyz0123456789,;:$.` 
+
+Nous recherchons une bonne couverture : 
+
+```bash
+ ./main --alphabet='abcdefghijklmnopqrstuvwxyz0123456789,;:$.' --size=5 --height=90000 --width=10000 test stats
+```
+ce qui donne une couverture de 95.8113
+
+on génère une table adaptée.
+
+```bash
+ ./main --alphabet='abcdefghijklmnopqrstuvwxyz0123456789,;:$.' --size=5 --height=90000 --width=10000 test save_table
+```
+
+```bash
+./main --alphabet='abcdefghijklmnopqrstuvwxyz0123456789,;:$.' --hash=dafaa5e15a30ecd52c2d1dc6d1a3d8a0633e67e2 --size=4 --height=90000 --width=10000 test crack
+```
+
+le resultat est **n00b.**
+
+On obtient ceci  : 
+
+>temps de génération de la table dans le fichier table.txt : 7m 62s
+>
+>taille de la table : ...
+>
+>temps de calcul de l'inverse (crackage) : 0.76s
+
+
+### Question 15
+
+Pour garantir la couverture de l'ensemble des mots de passe potentiels, la taille totale de la table arc-en-ciel est donnée par le produit de la taille de l'alphabet élevée à la puissance de la taille minimale du mot de passe, soit \( \text{{len(alphabet)}}^{(\text{{taille\_password}})} \), équivalent à \( 36^8 \) dans ce cas particulier.
+
+Le temps nécessaire pour générer cette table serait approximativement \( (\text{{len(alphabet)}}^{(\text{{taille\_password}})}) \times t \), où \( t \) représente le temps nécessaire pour calculer un hash et écrire les informations correspondantes dans un fichier, en considérant les deux colonnes (password et H8).
+
+### Question 16
+
+EN ATTENTE DE CODE
+
+### Question 17
+
+L'utilisation du sel dans le contexte des mots de passe vise à accroître la complexité du processus de hachage, rendant plus complexe la tâche des attaquants cherchant à utiliser des tables arc-en-ciel pour casser les mots de passe. Le sel consiste en l'ajout de caractères aléatoires au mot de passe avant le hachage. En conséquence, même si deux utilisateurs ont le même mot de passe, le hash résultant sera différent en raison de l'incorporation du sel unique.
+
+Cette différenciation des hashs rend inefficace l'utilisation de tables arc-en-ciel, car ces dernières reposent sur la précomputation de couples de mots de passe et de hashs correspondants. Avec l'ajout de sel, la relation entre un mot de passe et son hash devient spécifique à chaque utilisateur, compromettant ainsi la validité des tables arc-en-ciel précalculées. En conclusion, l'utilisation du sel renforce la sécurité en introduisant une variabilité individuelle dans le processus de hachage, décourageant les attaquants de s'appuyer sur des méthodes précalculées pour casser les mots de passe.

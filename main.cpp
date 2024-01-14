@@ -24,6 +24,8 @@ struct Config
     int alphabet_length;
     int height;
     int width;
+    string hash;
+    bool generateTableRandom = false;
 };
 
 Config globalConfig; // Variable globale pour stocker la configuration
@@ -149,23 +151,19 @@ void showHelp()
 
     cout << "  nouvelle_chaine  : test function nouvelle_chaine, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=5 test nouvelle_chaine \n";
 
-    cout << "  create_table  : test function create_table, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=5 --height=100 --width=200 test create_table \n";
+    cout << "  create_table  : test function create_table, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=5 --height=100 --width=200 test create_table \n";
 
-    cout << "  save_table  : test function save open and affiche table, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=5 --height=100 --width=200 test save_table \n";
+    cout << "  save_table  : test function save open and affiche table, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --size=5 --height=100 --width=200 test save_table \n";
 
-    /* cout << "  recherche_table  : test function recherche table, you need to give alphabet and size before ex : \n ./main --alphabet=abcdefghijklmnopqrstuvwxyz --alphabet_length=26 --size=5 --height=100 --width=200 test recherche_table \n"; */
+    cout << "  crack  : test function crack, you need to create file table.txt CHECK README before ex : \n ./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --hash=16de25af888480da1af57a71855f3e8c515dcb61 --size=4 --height=1000 --width=3000 test crack \n";
 
-    /* cout << "  verify_hash  : test function verify hash : \n ./main test verify_hash \n"; */
-
-    cout << "  inverse  : test function inverse, you need to create file table.txt before ex : \n ./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --alphabet_length=26 --size=4 --height=1000 --width=1000 test inverse \n";
-
-    cout << "  stats  : test function stats ex : \n ./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --alphabet_length=26 --size=4 --height=1000 --width=1000 test stats \n";
+    cout << "  stats  : test function stats ex : \n ./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --size=4 --height=1000 --width=1000 test stats \n";
 }
 // QUESTION 3 END
 
 // QUESTION 4 START
 
-string i2c(string alphabet, int taille, uint64_t n)
+string i2c(int taille, uint64_t n)
 {
     string result;
     for (int i = 0; i < taille; i++)
@@ -187,8 +185,8 @@ int test_i2c()
     cout << "N : " << globalConfig.N << "\n";
 
     cout << "Test de la fonction i2c : \n";
-    cout << "i2c(1234) = " << i2c(globalConfig.alphabet, globalConfig.taille, 1234) << std::endl;
-    cout << "i2c(" << globalConfig.N - 1 << ") = " << i2c(globalConfig.alphabet, globalConfig.taille, globalConfig.N - 1) << std::endl;
+    cout << "i2c(1234) = " << i2c(globalConfig.taille, 1234) << std::endl;
+    cout << "i2c(" << globalConfig.N - 1 << ") = " << i2c(globalConfig.taille, globalConfig.N - 1) << std::endl;
     return 1;
 }
 
@@ -235,7 +233,7 @@ int test_h2i()
 // Fonction pour transformer un indice en chaîne résultante
 uint64_t i2i(uint64_t index, uint64_t t)
 {
-    std::string value = i2c(globalConfig.alphabet, globalConfig.taille, index);
+    std::string value = i2c(globalConfig.taille, index);
 
     // add \0 to value
     std::stringstream ss;
@@ -267,17 +265,6 @@ void afficher_vecteur(int idx1, const vector<int> &vecteur)
 // Fonction pour générer une nouvelle chaine
 uint64_t nouvelle_chaine(uint64_t idx1, int largeur)
 {
-    /* vector<int> result;
-    int idx2 = idx1;
-    for (int i = 0; i < largeur - 1; ++i)
-    {
-        idx2 = i2i(i + 1, idx2);
-        result.push_back(idx2);
-    }
-    cout << "idx2 = " << idx2 << endl;
-    cout << "back = " << result.back() << endl;
-    return result; */
-
     uint64_t idx2 = idx1;
     for (int i = 0; i < largeur - 1; i++)
     {
@@ -305,16 +292,18 @@ int test_nouvelle_chaine()
     cout << "Test de la fonction nouvelle_chaine : \n";
     calculateN();
 
-    cout << "i2c(1234) = " << i2c(globalConfig.alphabet, globalConfig.taille, 1234) << endl;
-    cout << "i2c(" << globalConfig.N - 1 << ") = " << i2c(globalConfig.alphabet, globalConfig.taille, globalConfig.N - 1) << endl;
+    cout << "i2c(1234) = " << i2c(globalConfig.taille, 1234) << endl;
+    cout << "i2c(" << globalConfig.N - 1 << ") = " << i2c(globalConfig.taille, globalConfig.N - 1) << endl;
 
     uint64_t n1 = nouvelle_chaine(1, 1);
-    uint64_t n2 = nouvelle_chaine(1, 100);
-    uint64_t n3 = nouvelle_chaine(1, 1000);
+    uint64_t n2 = nouvelle_chaine(1, 10);
+    uint64_t n3 = nouvelle_chaine(1, 100);
+    uint64_t n4 = nouvelle_chaine(1, 1000);
 
     cout << "nouvelle_chaine(1, 1) = " << dec << n1 << endl;
-    cout << "nouvelle_chaine(1, 100) = " << dec << n2 << endl;
-    cout << "nouvelle_chaine(1, 1000) = " << dec << n3 << endl;
+    cout << "nouvelle_chaine(1, 10) = " << dec << n2 << endl;
+    cout << "nouvelle_chaine(1, 100) = " << dec << n3 << endl;
+    cout << "nouvelle_chaine(1, 1000) = " << dec << n4 << endl;
 
     /*  afficher_chaine(1, 1);
      afficher_chaine(1, 10);
@@ -343,10 +332,11 @@ vector<pair<uint64_t, uint64_t>> creer_table(int largeur, int hauteur)
 
     // Générer les chaînes suivantes
 
+    uint64_t idx1 = 0;
     for (int i = 0; i < hauteur; ++i)
     {
-        uint64_t idx1 = index_aleatoire();
-        // uint64_t idx1 = i; // pour vous monsieur pour tester
+        uint64_t idx1 = globalConfig.generateTableRandom ? index_aleatoire() : i;
+
         uint64_t result = nouvelle_chaine(idx1, largeur);
         table.push_back(make_pair(idx1, result));
     }
@@ -649,7 +639,7 @@ int verifie_candidat(const unsigned char *h, int t, uint64_t idx, std::string &c
     {
         idx = i2i(idx, i);
     }
-    clair = i2c(globalConfig.alphabet, globalConfig.taille, idx);
+    clair = i2c(globalConfig.taille, idx);
     unsigned char h2[SHA_DIGEST_LENGTH];
     calculateHash(clair.c_str(), h2);
     if (verifyHash(h2, h) == 1)
@@ -689,27 +679,50 @@ uint64_t inverse(vector<pair<uint64_t, uint64_t>> &table, const unsigned char *h
     return 0;
 }
 
-int test_inverse()
+int test_crack()
 {
     updateGlobalConfigN();
     vector<pair<uint64_t, uint64_t>> table;
     ouvre_table("table.txt", table);
 
     cout << endl;
-    cout << "test inverse" << endl;
 
-    std::string clair;
-    unsigned char hash[SHA_DIGEST_LENGTH];
-    calculateHash("n00b.", hash);
-
-    cout << "hash = ";
-    for (int i = 0; i < SHA_DIGEST_LENGTH; i++)
+    if (globalConfig.hash.empty())
     {
-        cout << hex << setw(2) << setfill('0') << (int)hash[i];
+        cout << "test inverse for word CODE" << endl;
+
+        std::string clair;
+        unsigned char hash[SHA_DIGEST_LENGTH];
+        calculateHash("CODE", hash);
+
+        cout << "hash = ";
+        for (int i = 0; i < SHA_DIGEST_LENGTH; i++)
+        {
+            cout << hex << setw(2) << setfill('0') << (int)hash[i];
+        }
+        cout << endl;
+        inverse(table, hash, clair, globalConfig.width, globalConfig.height);
+    }
+    else
+    {
+        cout << "test inverse for hash " << globalConfig.hash << endl;
+
+        std::string clair;
+        unsigned char hash[SHA_DIGEST_LENGTH];
+        for (int i = 0; i < SHA_DIGEST_LENGTH; i++)
+        {
+            hash[i] = hexToDecimal(globalConfig.hash.substr(i * 2, 2));
+        }
+
+        cout << "hash = ";
+        for (int i = 0; i < SHA_DIGEST_LENGTH; i++)
+        {
+            cout << hex << setw(2) << setfill('0') << (int)hash[i];
+        }
+        cout << endl;
+        inverse(table, hash, clair, globalConfig.width, globalConfig.height);
     }
 
-    cout << endl;
-    inverse(table, hash, clair, globalConfig.width, globalConfig.height);
     return 0;
 }
 
@@ -792,9 +805,9 @@ int main_test(int argc, char *argv[])
     {
         return testVerifyHash();
     }
-    else if (std::strcmp("inverse", test) == 0)
+    else if (std::strcmp("crack", test) == 0)
     {
-        return test_inverse();
+        return test_crack();
     }
     else if (std::strcmp("stats", test) == 0)
     {
@@ -853,6 +866,16 @@ int main(int argc, char *argv[])
         if (strncmp(arg, "--height=", 9) == 0)
         {
             globalConfig.height = atoi(arg + 9);
+        }
+
+        if (strncmp(arg, "--randTable", 11) == 0)
+        {
+            globalConfig.generateTableRandom = true;
+        }
+
+        if (strncmp(arg, "--hash=", 7) == 0)
+        {
+            globalConfig.hash = arg + 7;
         }
     }
 }

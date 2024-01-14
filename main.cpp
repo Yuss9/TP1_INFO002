@@ -76,7 +76,6 @@ int test_hash(int argc, char *argv[])
         unsigned char hash[SHA_DIGEST_LENGTH];
         calculateHash(clear, hash);
 
-        // print clear text and hash
         cout << "hash for = " << clear << endl;
         cout << "hash = ";
         for (int i = 0; i < SHA_DIGEST_LENGTH; i++)

@@ -732,6 +732,8 @@ int test_stats()
 {
     updateGlobalConfigN();
     cout << "Affichage de la config : \n";
+    cout << "Alphabet : " << globalConfig.alphabet << "\n";
+    cout << "Alphabet length : " << globalConfig.alphabet.size() << "\n";
     cout << "Height : " << globalConfig.height << "\n";
     cout << "Width : " << globalConfig.width << "\n";
 
@@ -835,7 +837,7 @@ int main(int argc, char *argv[])
 
         if (strncmp(arg, "--alphabet=", 11) == 0)
         {
-            globalConfig.alphabet = "abcdefghijklmnopqrstuvwxyz0123456789,;:$.";
+            globalConfig.alphabet = arg + 11;
             globalConfig.alphabet_length = globalConfig.alphabet.size();
         }
 

@@ -5,7 +5,7 @@ Sujet : https://pierre-hyvernat.apps.math.cnrs.fr/data/Enseignement/2324/info002
 ### STATUS 
 
 Equipe : YURTSEVEN Hüseyin, CHAVANCE Rémi, DURAND-NOËL Amaury
-Etat : on a fait toute les questions sauf la 16 par manque de temps, la question 17 a été faite. 
+Etat : on a fait toutes les questions sauf la 16 par manque de temps, la question 17 a été faite. 
 
 ### COMMANDES : 
 

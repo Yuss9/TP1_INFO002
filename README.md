@@ -4,6 +4,9 @@ Sujet : https://pierre-hyvernat.apps.math.cnrs.fr/data/Enseignement/2324/info002
 
 GITHUB : https://github.com/Yuss9/TP1_INFO002
 
+#### IMPORTANT 
+Toutes les commandes fonctionnent correctement. Un script Bash est disponible pour tester l'ensemble, à l'exception de la deuxième partie des questions 14 et 16, pour la deuxième il faut prendre les commandes du README.
+
 ### STATUS 
 
 Equipe : YURTSEVEN Hüseyin, CHAVANCE Rémi, DURAND-NOËL Amaury

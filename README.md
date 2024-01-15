@@ -2,6 +2,8 @@
 
 Sujet : https://pierre-hyvernat.apps.math.cnrs.fr/data/Enseignement/2324/info002/tp1.html#toc_1
 
+GITHUB : https://github.com/Yuss9/TP1_INFO002
+
 ### STATUS 
 
 Equipe : YURTSEVEN Hüseyin, CHAVANCE Rémi, DURAND-NOËL Amaury

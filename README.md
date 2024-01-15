@@ -275,3 +275,8 @@ $len(alphabet)^{taille password}/2 = (36^8)/2$
 L'utilisation du sel dans le contexte des mots de passe vise à accroître la complexité du processus de hachage, rendant plus complexe la tâche des attaquants cherchant à utiliser des tables arc-en-ciel pour casser les mots de passe. Le sel consiste en l'ajout de caractères aléatoires au mot de passe avant le hachage. En conséquence, même si deux utilisateurs ont le même mot de passe, le hash résultant sera différent en raison de l'incorporation du sel unique.
 
 Cette différenciation des hashs rend inefficace l'utilisation de tables arc-en-ciel, car ces dernières reposent sur la précomputation de couples de mots de passe et de hashs correspondants. Avec l'ajout de sel, la relation entre un mot de passe et son hash devient spécifique à chaque utilisateur, compromettant ainsi la validité des tables arc-en-ciel précalculées. En conclusion, l'utilisation du sel renforce la sécurité en introduisant une variabilité individuelle dans le processus de hachage, décourageant les attaquants de s'appuyer sur des méthodes précalculées pour casser les mots de passe.
+
+
+### SUITE DU TP ? 
+
+Pour la suite du TP, nous cherchons à optimiser davantage nos applications afin de réduire leur temps d'exécution.

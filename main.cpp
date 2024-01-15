@@ -26,6 +26,7 @@ struct Config
     int width;
     string hash;
     bool generateTableRandom = false;
+    bool rechercheExhaustif = false;
 };
 
 Config globalConfig; // Variable globale pour stocker la configuration
@@ -650,6 +651,23 @@ int verifie_candidat(const unsigned char *h, int t, uint64_t idx, std::string &c
     return 0;
 }
 
+// FUNCTION QUESTION 16
+int recherche_exaustive(const unsigned char *h)
+{
+    for (int i = 0; i < globalConfig.N; i++)
+    {
+        string clair = i2c(globalConfig.taille, i);
+        unsigned char h2[SHA_DIGEST_LENGTH];
+        calculateHash(clair.c_str(), h2);
+        if (verifyHash(h2, h) == 1)
+        {
+            cout << endl
+                 << "Résultat : " << clair << endl;
+            return 1;
+        }
+    }
+}
+
 uint64_t inverse(vector<pair<uint64_t, uint64_t>> &table, const unsigned char *h, std::string &clair, int largeur, int hauteur)
 {
     for (int t = largeur - 1; t > 0; t--)
@@ -662,15 +680,27 @@ uint64_t inverse(vector<pair<uint64_t, uint64_t>> &table, const unsigned char *h
         }
 
         int a, b;
-        if (recherche(table, hauteur, idx, &a, &b) > 0)
+
+        if (globalConfig.rechercheExhaustif)
         {
-            for (int i = a; i <= b; i++)
+            if (recherche_exaustive(h) == 1)
             {
-                if (verifie_candidat(h, t, table[i].first, clair) == 1)
+                cout << "recherche_exaustive" << endl;
+                return 1;
+            }
+        }
+        else
+        {
+            if (recherche(table, hauteur, idx, &a, &b) > 0)
+            {
+                for (int i = a; i <= b; i++)
                 {
-                    cout << endl
-                         << "Résultat : " << clair << endl;
-                    return 1;
+                    if (verifie_candidat(h, t, table[i].first, clair) == 1)
+                    {
+                        cout << endl
+                             << "Résultat : " << clair << endl;
+                        return 1;
+                    }
                 }
             }
         }
@@ -871,6 +901,11 @@ int main(int argc, char *argv[])
         if (strncmp(arg, "--randTable", 11) == 0)
         {
             globalConfig.generateTableRandom = true;
+        }
+
+        if (strncmp(arg, "--exhaustif", 11) == 0)
+        {
+            globalConfig.rechercheExhaustif = true;
         }
 
         if (strncmp(arg, "--hash=", 7) == 0)

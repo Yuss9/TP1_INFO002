@@ -68,5 +68,11 @@ echo "PARTIE 1 QUESTION 14"
 echo "Pour la partie 2 voir le README"
 ./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --size=4 --height=1000 --width=3000 test save_table
 ./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --hash=16de25af888480da1af57a71855f3e8c515dcb61 --size=4 --height=1000 --width=3000 test crack
+
+
+# QUESTION 16
+echo "QUESTION 16"
+./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --size=4 --height=1000 --width=3000 test save_table
+./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --hash=16de25af888480da1af57a71855f3e8c515dcb61 --exhaustif --size=4 --height=1000 --width=3000 test crack
 echo ""
-echo "Fin du test.sh, Pour la partie 2 voir le README"
+echo "Fin du test.sh, Pour la partie 2 de la question 14 voir le README"

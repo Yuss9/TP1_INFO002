@@ -5,7 +5,7 @@ Sujet : https://pierre-hyvernat.apps.math.cnrs.fr/data/Enseignement/2324/info002
 ### STATUS 
 
 Equipe : YURTSEVEN Hüseyin, CHAVANCE Rémi, DURAND-NOËL Amaury
-Etat : on a fait toutes les questions sauf la 16 par manque de temps, la question 17 a été faite. 
+Etat : on a fait toutes les questions, sauf la partie bonus. 
 
 ### COMMANDES : 
 
@@ -220,7 +220,14 @@ Le temps nécessaire pour générer cette table serait approximativement $`\text
 
 ### Question 16
 
-EN ATTENTE DE CODE
+```bash
+ ./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --size=4 --height=1000 --width=3000 test save_table
+```
+
+
+```bash
+./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --hash=16de25af888480da1af57a71855f3e8c515dcb61 --exhaustif --size=4 --height=1000 --width=3000 test crack
+```
 
 ### Question 17
 

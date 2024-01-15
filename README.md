@@ -216,7 +216,7 @@ On obtient ceci  :
 
 Pour garantir la couverture de l'ensemble des mots de passe potentiels, la taille totale de la table arc-en-ciel est donnée par le produit de la taille de l'alphabet élevée à la puissance de la taille minimale du mot de passe, soit $\text{len(alphabet)}^{(\text{taille\_password})}$, équivalent à $36^8$ dans ce cas particulier.
 
-Le temps nécessaire pour générer cette table serait approximativement $\text{{len(alphabet)}}^{(\text{taille\_password})} \times t$, où $t$ représente le temps nécessaire pour calculer un hash et écrire les informations correspondantes dans un fichier, en considérant les deux colonnes (password et H8).
+Le temps nécessaire pour générer cette table serait approximativement $\text{{len(alphabet)}}^{(\text{taille\\_password})} \times t$, où $t$ représente le temps nécessaire pour calculer un hash et écrire les informations correspondantes dans un fichier, en considérant les deux colonnes (password et H8).
 
 ### Question 16
 

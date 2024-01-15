@@ -187,27 +187,27 @@ Pour `dafaa5e15a30ecd52c2d1dc6d1a3d8a0633e67e2` de taille `5` et l'alphabet suiv
 Nous recherchons une bonne couverture : 
 
 ```bash
- ./main --alphabet='abcdefghijklmnopqrstuvwxyz0123456789,;:$.' --size=5 --height=90000 --width=10000 test stats
+ ./main --alphabet='abcdefghijklmnopqrstuvwxyz0123456789,;:$.' --size=5 --height=20000 --width=10000 test stats
 ```
-ce qui donne une couverture de 95.8113
+ce qui donne une couverture de 71.1955 % 
 
 on génère une table adaptée.
 
 ```bash
- ./main --alphabet='abcdefghijklmnopqrstuvwxyz0123456789,;:$.' --size=5 --height=90000 --width=10000 test save_table
+ ./main --alphabet='abcdefghijklmnopqrstuvwxyz0123456789,;:$.' --size=5 --height=20000 --width=10000 test save_table
 ```
 
 ```bash
-./main --alphabet='abcdefghijklmnopqrstuvwxyz0123456789,;:$.' --hash=dafaa5e15a30ecd52c2d1dc6d1a3d8a0633e67e2 --size=4 --height=90000 --width=10000 test crack
+./main --alphabet='abcdefghijklmnopqrstuvwxyz0123456789,;:$.' --hash=dafaa5e15a30ecd52c2d1dc6d1a3d8a0633e67e2 --size=5 --height=20000 --width=10000 test crack
 ```
 
 le resultat est **n00b.**
 
 On obtient ceci  : 
 
->temps de génération de la table dans le fichier table.txt : 7m 62s
+>temps de génération de la table dans le fichier table.txt : 3m 42s
 >
->taille de la table : ...
+>taille de la table : 283Ko
 >
 >temps de calcul de l'inverse (crackage) : 0.76s
 
@@ -220,6 +220,10 @@ Le temps nécessaire pour générer cette table serait approximativement $`\text
 
 ### Question 16
 
+#### PARTIE 1
+
+Pour le mot **CODE** : 
+
 ```bash
  ./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --size=4 --height=1000 --width=3000 test save_table
 ```
@@ -228,6 +232,43 @@ Le temps nécessaire pour générer cette table serait approximativement $`\text
 ```bash
 ./main --alphabet=ABCDEFGHIJKLMNOPQRSTUVWXYZ --hash=16de25af888480da1af57a71855f3e8c515dcb61 --exhaustif --size=4 --height=1000 --width=3000 test crack
 ```
+
+
+On obtient ceci  : 
+
+>temps de génération de la table dans le fichier table.txt : 3s
+>
+>taille de la table : 10K
+>
+>temps de calcul de l'inverse (crackage) : 0.076s
+
+#### PARTIE 2 
+
+Pour le mot **n00b.** : 
+
+```bash
+ ./main --alphabet='abcdefghijklmnopqrstuvwxyz0123456789,;:$.' --size=5 --height=20000 --width=10000 test save_table
+```
+
+
+```bash
+./main --alphabet='abcdefghijklmnopqrstuvwxyz0123456789,;:$.' --hash=dafaa5e15a30ecd52c2d1dc6d1a3d8a0633e67e2 --exhaustif --size=5 --height=20000 --width=10000 test crack
+```
+
+On obtient ceci  : 
+
+>temps de génération de la table dans le fichier table.txt : 3m 42s
+>
+>taille de la table : 283K
+>
+>temps de calcul de l'inverse (crackage) : 34s
+
+
+#### CONCLUSION QUESTION 16 
+
+Avec une recherche exaustive, en moyenne, le temps pour trouver le mot de passe est de
+$len(alphabet)^{taille password}/2 = (36^8)/2$ 
+
 
 ### Question 17
 
